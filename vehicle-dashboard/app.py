@@ -106,7 +106,7 @@ def processed_video_stream():
 def fetch_real_time_data():
     global metrics_data
 
-    ESP8266_IP = "192.168.137.7"  # Replace with your ESP8266's IP address
+    ESP8266_IP = "192.168.137.70"  # Replace with your ESP8266's IP address
     ESP8266_URL = f"http://{ESP8266_IP}/"
 
     while True:
