@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 0.1px;
+    text-align: center;
+    font-size: 24px;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+}
+
+.video-container, .stats-container, .chart-container {
+    flex: 1 1 30%;
+    min-width: 300px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+
+/* Chart container styling */
+.chart-container {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-height: 400px;
+    overflow: hidden;
+}
+
+#logs-container {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+  
+#logs-content {
+    max-height: 300px; /* Set the height for the scrollable area */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+}
+  
+#logs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#logs-table th, #logs-table td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#logs-table th {
+    background-color: #007bff;
+    color: white;
+}
+
+#logs-content {
+    max-height: 300px;
+    overflow-y: auto;
+}

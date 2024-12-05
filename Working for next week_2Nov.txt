@@ -1,0 +1,28 @@
+Counting problem solve
+2nd dataset improve
+case for camera
+configure MAC instead of IP
+
+
+
+23 Nov 2024 
+task divide/ assign
+Static Ip and DNS
+overtaking based on distance calculation
+real life model
+distance on back and front 
+
+
+
+web-based dashboard:
+Real-time video feed with detections.
+A log of overtaking events, showing car IDs and timestamps.
+Distance data from the sensors.
+
+
+
+
+Dashboard v3 is perfect
+
+
+

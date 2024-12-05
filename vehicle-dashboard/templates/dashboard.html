@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Monitoring Dashboard</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Vehicle Monitoring Dashboard</h1>
+    </header>
+    <main>
+        <div class="container">
+            <div class="video-container">
+                <h2>Live Video Feed</h2>
+                <!-- Add buttons to switch video mode -->
+                <button id="raw-stream-btn">Raw Stream</button>
+                <button id="opencv-stream-btn">OpenCV Stream</button>
+                <img id="video-feed" src="/video_feed/raw" alt="Video Feed">
+            </div>
+            <div class="stats-container">
+                <h2>Real-Time Statistics</h2>
+                <div id="stats">
+                    <p>Total Vehicles: <span id="total-vehicles">0</span></p>
+                    <p>Front Distance: <span id="front-distance">0</span> cm</p>
+                    <p>Back Distance: <span id="back-distance">0</span> cm</p>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h2>Vehicle SpeedChart</h2>
+                <canvas id="speedChart"></canvas>
+                <!-- Chart will be dynamically inserted here -->
+            </div>
+            <div id="logs-container">
+                <h3>Logs</h3>
+                <div id="logs-content">
+                    <table id="logs-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Vehicle ID</th>
+                                <th>Type</th>
+                                <th>Speed</th>
+                                <th>Overtaking Event</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-list">
+                            <!-- Logs will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>        
+    </main>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

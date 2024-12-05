@@ -1,0 +1,63 @@
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include <NewPing.h>
+
+#define TRIGGER_PIN 5  // GPIO5 (D1) on ESP8266
+#define ECHO_PIN 4     // GPIO4 (D2) on ESP8266
+#define BUZZER_PIN 14  // GPIO14 (D5) for the buzzer (you can change it if needed)
+#define MAX_DISTANCE 200  // Maximum distance for ultrasonic sensor
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+
+// Wi-Fi credentials
+const char* ssid = "ABAD-BB2";  
+const char* password = "Abad723-Linux";
+
+// ESP8266 Web Server on port 80
+ESP8266WebServer server(80);
+
+void setup() {
+  Serial.begin(115200);
+
+  // Start WiFi connection
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.println("Connecting to WiFi...");
+  }
+  Serial.println("Connected to WiFi");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+
+  // Buzzer setup
+  pinMode(BUZZER_PIN, OUTPUT);  // Set the buzzer pin as output
+  digitalWrite(BUZZER_PIN, LOW);  // Initialize buzzer off
+
+  // Handle web server requests
+  server.on("/", []() {
+    int distance = sonar.ping_cm();
+
+    // Buzzer alert with siren effect if distance is less than 50 cm
+    if (distance > 0 && distance < 50) {
+      for (int i = 0; i < 5; i++) {  // Create the siren effect by toggling the buzzer 5 times
+        digitalWrite(BUZZER_PIN, HIGH);
+        delay(200);  // Buzzer on for 200ms
+        digitalWrite(BUZZER_PIN, LOW);
+        delay(200);  // Buzzer off for 200ms
+      }
+      Serial.println("Warning: Vehicle too close!");
+    } else {
+      digitalWrite(BUZZER_PIN, LOW);  // Turn off buzzer when distance is safe
+    }
+
+    // Send distance value as a response
+    server.send(200, "text/plain", String(distance) + " cm");
+  });
+
+  server.begin();
+  Serial.println("Server started");
+}
+
+void loop() {
+  server.handleClient();
+}

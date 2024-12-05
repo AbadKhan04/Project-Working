@@ -1,0 +1,8 @@
+OpenCV-with-Threading: Streaming best , Detection worst (detect other things as car) , Dataset: car.xml
+
+Vehicle_Detection-Tracking: Streaming best , Detection good (sometime detect all frame / can be improved), Dataset: deploy.prototxt , mobilenet_iter
+
+v2_Update_code_Detection: Streaming ToSlow (delay in seconds) , Detection not Good (many time not detect vehicle, detect same car in multiply frame due to this speed in not calculating properly) , Dataset: yolov3-tiny
+
+
+v1_update_code_detection: Streaming ToSlow (delay in seconds) , Detection not Good (many time not detect vehicle), Dataset: yolov3-tiny
