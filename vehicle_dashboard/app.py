@@ -32,7 +32,7 @@ metrics_data = {
 def gen_frames():
     import cv2
     import urllib.request
-    stream = urllib.request.urlopen('http://192.168.137.238/stream')
+    stream = urllib.request.urlopen('http://192.168.137.142/stream')
     bytes_data = b''
     while True:
         try:
@@ -54,7 +54,7 @@ def gen_frames():
 def frame_fetcher():
     while True:
         try:
-            stream = urllib.request.urlopen('http://192.168.137.238/stream')  # Your ESP32 Stream URL
+            stream = urllib.request.urlopen('http://192.168.137.142/stream')  # Your ESP32 Stream URL
             bytes_data = b''
             while True:
                 bytes_data += stream.read(4096)
@@ -76,7 +76,7 @@ fetch_thread.start()
 
 # Function to generate processed video frames with OpenCV detections
 def processed_video_stream():
-    stream = urllib.request.urlopen('http://192.168.137.238/stream')  # ESP32 stream URL
+    stream = urllib.request.urlopen('http://192.168.137.142/stream')  # ESP32 stream URL
     bytes_data = b''
     while True:
         try:
@@ -106,7 +106,7 @@ def processed_video_stream():
 def fetch_real_time_data():
     global metrics_data
 
-    ESP8266_IP = "192.168.137.70"  # Replace with your ESP8266's IP address
+    ESP8266_IP = "192.168.137.197"  # Replace with your ESP8266's IP address
     ESP8266_URL = f"http://{ESP8266_IP}/"
 
     while True:

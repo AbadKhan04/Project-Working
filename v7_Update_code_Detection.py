@@ -1,5 +1,5 @@
-import cv2                  # run it  # running smooth now testing on real car
-import numpy as np          # work perfect can show sir this code | dashboard work ongoing
+import cv2                  
+import numpy as np          
 import urllib.request
 import threading
 import queue
@@ -28,6 +28,9 @@ vehicle_positions = {}
 tracked_vehicles = set()
 last_detection_time = time.time()
 total_vehicle_count = 0
+previous_distance = 0  # For own speed calculation
+current_distance = 0
+last_speed_calc_time = time.time()
 
 # Load YOLO model and COCO classes
 def load_yolo():
@@ -113,6 +116,15 @@ def draw_detections(frame, detections):
         cv2.putText(frame, f"{label} {confidence:.2f}", (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         cv2.putText(frame, f"Speed: {speed:.2f}", (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
+# Calculate own speed
+def calculate_own_speed(previous_distance, current_distance, time_elapsed):
+    if time_elapsed > 0:
+        speed_mps = (current_distance - previous_distance) / time_elapsed  # Speed in meters per second
+        speed_kmph = speed_mps * 3.6  # Convert to km/h
+        return speed_mps, speed_kmph
+    else:
+        return 0, 0
+
 # Frame Fetching
 def frame_fetcher():
     try:
@@ -141,6 +153,12 @@ while True:
         frame = frame_queue.get()
         current_time = time.time()
 
+        # Calculate own speed
+        time_elapsed = current_time - last_speed_calc_time
+        own_speed_mps, own_speed_kmph = calculate_own_speed(previous_distance, current_distance, time_elapsed)
+        previous_distance = current_distance
+        last_speed_calc_time = current_time
+
         # Run detections periodically
         detections = []
         if current_time - last_detection_time >= DETECTION_INTERVAL:
@@ -155,12 +173,13 @@ while True:
 
         # Display warnings
         if front_distance < DISTANCE_WARNING_THRESHOLD:
-            cv2.putText(frame, "Warning: Front too close!", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            cv2.putText(frame, "Warning: Front too close!", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
         if back_distance < DISTANCE_WARNING_THRESHOLD:
-            cv2.putText(frame, "Warning: Back too close!", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            cv2.putText(frame, "Warning: Back too close!", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
-        # Display total vehicle count
-        cv2.putText(frame, f"Total Vehicles: {total_vehicle_count}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        # Display total vehicle count and own speed
+        cv2.putText(frame, f"Total Vehicles: {total_vehicle_count}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+        cv2.putText(frame, f"Your Speed: {own_speed_kmph:.2f} km/h", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
 
         cv2.imshow('ESP32-CAM Stream', frame)
 
