@@ -20,21 +20,22 @@ LOG_FILE = 'vehicle_log.csv'
 # Queue to hold real-time data
 data_queue = Queue(maxsize=1)
 # Shared global dictionary for metrics data
-frame_queue = queue.Queue(maxsize=10)
+frame_queue = queue.Queue(maxsize=5)
 metrics_data = {
     "front_distance": 0,
     "back_distance": 0,
     "total_vehicle_count": 0,
     "overtaking": False
 }
-ESP32_STREAM_URL = 'http://192.168.137.76/stream'
 
-# Function to fetch frames from ESP32
-def fetch_frames():
-    try:
-        stream = urllib.request.urlopen(ESP32_STREAM_URL)
-        bytes_data = b''
-        while True:
+# Function to simulate ESP32 stream
+def gen_frames():
+    import cv2
+    import urllib.request
+    stream = urllib.request.urlopen('http://192.168.137.76/stream')
+    bytes_data = b''
+    while True:
+        try:
             bytes_data += stream.read(4096)
             a = bytes_data.find(b'\xff\xd8')
             b = bytes_data.find(b'\xff\xd9')
@@ -42,39 +43,39 @@ def fetch_frames():
                 jpg = bytes_data[a:b + 2]
                 bytes_data = bytes_data[b + 2:]
                 frame = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-                if not frame_queue.full():
-                    frame_queue.put(frame)
-    except Exception as e:
-        print(f"Error fetching frames: {e}")
+                _, buffer = cv2.imencode('.jpg', frame)
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+        except Exception as e:
+            print(f"Error in video feed: {e}")
+            break
 
-# Start frame fetching in a thread
-fetch_thread = threading.Thread(target=fetch_frames, daemon=True)
-fetch_thread.start()
-
-# Generator for raw frames
-def gen_raw_frames():
+# Function to generate processed video frames with OpenCV detections
+def processed_video_stream():
+    import cv2
+    import urllib.request
+    stream = urllib.request.urlopen('http://192.168.137.76/stream')  # ESP32 stream URL
+    bytes_data = b''
     while True:
-        if not frame_queue.empty():
-            frame = frame_queue.get()
-            _, buffer = cv2.imencode('.jpg', frame)
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+        try:
+            bytes_data += stream.read(4096)
+            a = bytes_data.find(b'\xff\xd8')
+            b = bytes_data.find(b'\xff\xd9')
+            if a != -1 and b != -1:
+                jpg = bytes_data[a:b + 2]
+                bytes_data = bytes_data[b + 2:]
+                frame = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
 
-# Generator for OpenCV-processed frames
-def gen_opencv_frames():
-    while True:
-        if not frame_queue.empty():
-            frame = frame_queue.get()
+                # Process frame using OpenCV detection
+                detections = detect_vehicles(frame)
+                draw_detections(frame, detections)
 
-            # Example OpenCV processing: Convert to grayscale
-            processed_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_GRAY2BGR)
-
-            # Encoding the processed frame
-            _, buffer = cv2.imencode('.jpg', processed_frame)
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
-
+                _, buffer = cv2.imencode('.jpg', frame)
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+        except Exception as e:
+            print(f"Error in processed video stream: {e}")
+            break
 
 # Function to fetch metrics periodically
 # Thread to fetch real-time data
@@ -122,11 +123,11 @@ def logs():
 # Route for video feed
 @app.route('/video_feed/raw')
 def raw_video_feed():
-    return Response(gen_raw_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/video_feed/opencv')
 def opencv_video_feed():
-    return Response(gen_opencv_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(processed_video_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Main dashboard route
 @app.route('/')
