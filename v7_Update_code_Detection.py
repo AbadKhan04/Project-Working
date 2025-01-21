@@ -9,9 +9,9 @@ import requests
 import os
 
 # Configuration
-ESP32_STREAM_URL = 'http://192.168.137.202/stream'
-FRONT_SENSOR_URL = 'http://192.168.137.142/'
-BACK_SENSOR_URL = 'http://192.168.137.142/'
+ESP32_STREAM_URL = 'http://192.168.137.70/stream'
+FRONT_SENSOR_URL = 'http://192.168.137.93/'
+BACK_SENSOR_URL = 'http://192.168.137.93/'
 YOLO_CONFIG = 'Datasets/yolov3-tiny.cfg'
 YOLO_WEIGHTS = 'Datasets/yolov3-tiny.weights'
 COCO_NAMES = 'Datasets/coco.names'
@@ -28,11 +28,11 @@ vehicle_positions = {}
 tracked_vehicles = set()
 last_detection_time = time.time()
 total_vehicle_count = 0
-previous_distance = 0  # For own speed calculation
+previous_distance = 0 
 current_distance = 0
 last_speed_calc_time = time.time()
 
-# Load YOLO model and COCO classes
+# Load Model and COCO classes
 def load_yolo():
     net = cv2.dnn.readNet(YOLO_WEIGHTS, YOLO_CONFIG)
     layer_names = net.getLayerNames()
@@ -43,16 +43,15 @@ def load_yolo():
 
 net, output_layers, classes = load_yolo()
 
-# Initialize CSV logging
+# Logging
 def initialize_csv():
-    if not os.path.exists(CSV_LOG_FILE):  # Check if file exists
+    if not os.path.exists(CSV_LOG_FILE): 
         with open(CSV_LOG_FILE, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["Timestamp", "Vehicle_ID", "Type", "Speed", "Overtaking_Event"])
 
 initialize_csv()
 
-# Helper Functions
 def log_event(vehicle_id, vehicle_type, speed, overtaking=False):
     with open(CSV_LOG_FILE, mode='a', newline='') as file:
         writer = csv.writer(file)
@@ -119,8 +118,8 @@ def draw_detections(frame, detections):
 # Calculate own speed
 def calculate_own_speed(previous_distance, current_distance, time_elapsed):
     if time_elapsed > 0:
-        speed_mps = (current_distance - previous_distance) / time_elapsed  # Speed in meters per second
-        speed_kmph = speed_mps * 3.6  # Convert to km/h
+        speed_mps = (current_distance - previous_distance) / time_elapsed 
+        speed_kmph = speed_mps * 3.6 
         return speed_mps, speed_kmph
     else:
         return 0, 0
@@ -143,17 +142,17 @@ def frame_fetcher():
     except Exception as e:
         print(f"Error in frame fetcher: {e}")
 
-# Start frame fetching in a thread
+# Frame fetching in a thread
 fetch_thread = threading.Thread(target=frame_fetcher, daemon=True)
 fetch_thread.start()
 
-# Main loop
+# Main Loop
 while True:
     if not frame_queue.empty():
         frame = frame_queue.get()
         current_time = time.time()
 
-        # Calculate own speed
+        # Calculating own speed
         time_elapsed = current_time - last_speed_calc_time
         own_speed_mps, own_speed_kmph = calculate_own_speed(previous_distance, current_distance, time_elapsed)
         previous_distance = current_distance
@@ -171,7 +170,7 @@ while True:
         # Fetch distance sensor data
         front_distance, back_distance = fetch_distances()
 
-        # Display warnings
+        # Warnings
         if front_distance < DISTANCE_WARNING_THRESHOLD:
             cv2.putText(frame, "Warning: Front too close!", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
         if back_distance < DISTANCE_WARNING_THRESHOLD:
