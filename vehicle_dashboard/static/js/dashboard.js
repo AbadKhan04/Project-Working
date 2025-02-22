@@ -1,14 +1,5 @@
 let speedChart; // Chart instance
 
-// Function to change video feed source based on button clicks
-document.getElementById("raw-stream-btn").addEventListener("click", function() {
-    document.getElementById("video-feed").src = "/video_feed/raw";
-});
-
-document.getElementById("opencv-stream-btn").addEventListener("click", function() {
-    document.getElementById("video-feed").src = "/video_feed/opencv";
-});
-
 // Function to fetch metrics and update DOM elements
 async function fetchMetrics() {
     try {
