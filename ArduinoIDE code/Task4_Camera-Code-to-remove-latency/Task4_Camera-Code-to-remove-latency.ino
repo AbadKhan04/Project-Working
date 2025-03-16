@@ -3,8 +3,8 @@
 #include "esp_http_server.h"
 
 // Replace with your network credentials
-const char* ssid = "DESKTOP-F614S19";
-const char* password = "Error404";
+const char* ssid = "ABAD-BB2";
+const char* password = "Abad723-Linux";
 
 // Function to handle video streaming
 esp_err_t stream_handler(httpd_req_t *req) {

@@ -1,0 +1,20 @@
+FYP 2 working :
+
+Led add (Red , green , Yellow {Blink this one only})
+Red -> not overtake
+Green -> overtake
+Yellow -> Can be overtake can not
+
+UI add for Dashboard  
+
+4car for testing
+testing detection, distance, overtake
+
+
+
+-----------------------------------------------
+https://esp32.com/viewtopic.php?t=42288 (Pin Configuration)
+
+https://github.com/0015/ThatProject.git
+
+https://www.youtube.com/watch?v=imNWs6XghI4
