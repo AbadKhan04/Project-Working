@@ -38,7 +38,7 @@ void setupCamera() {
 
     config.frame_size = FRAMESIZE_QVGA;  // ✅ 320x240 for better compatibility
     config.jpeg_quality = 15;            // ✅ Higher compression for stability
-    config.fb_count = 1;
+    config.fb_count = 2;
 
     // ❌ Disable PSRAM
     config.fb_location = CAMERA_FB_IN_DRAM;
@@ -56,6 +56,8 @@ size_t jpgRead(JDEC* jd, uint8_t* buff, size_t nbyte) {
     camera_fb_t* fb = (camera_fb_t*)jd->device;
 
     if (!fb) return 0;
+    if (offset == 0) Serial.println("✅ Resetting JPEG Read Offset!"); // Debugging
+
     if (offset + nbyte > fb->len) nbyte = fb->len - offset;
 
     if (buff) {
@@ -121,6 +123,8 @@ void displayImage() {
         return;
     }
 
+    // offset = 0; // * ✅ Reset offset before decompression
+
     JDEC jd;
     JRESULT res;
     // uint16_t image[320 * 240];  // ✅ Buffer for image data (320 * 240)
@@ -130,6 +134,7 @@ void displayImage() {
       Serial.println("✅ JPEG Decompression Started...");
       jd_decomp(&jd, jpgToBuffer, 0);
     } else {
+        // Serial.println("JPEG Decompression Failed");
         Serial.printf("❌ JPEG Decompression Failed! Error: %d\n", res);
     }
 
