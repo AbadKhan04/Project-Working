@@ -106,7 +106,7 @@ void warnProximity(int distance) {
     int beepDelay = (distance <= 100) ? 100 : 300; // Faster beep if closer than 10m
     for (int i = 0; i < 3; i++) {
       digitalWrite(BUZZER_PIN, HIGH);
-      digitalWrite(RED_LED, LOW);
+      digitalWrite(RED_LED, HIGH);
       delay(beepDelay);
       digitalWrite(BUZZER_PIN, LOW);
       digitalWrite(RED_LED, HIGH);
