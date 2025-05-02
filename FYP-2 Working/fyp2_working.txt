@@ -11,6 +11,8 @@ UI add for Dashboard
 testing detection, distance, overtake
 
 
+ESP32 IP Address: 192.168.100.29
+ESP32 MAC Address: A0:B7:65:25:BE:08
 
 -----------------------------------------------
 https://randomnerdtutorials.com/esp32-cam-ai-thinker-pinout/
@@ -20,3 +22,62 @@ https://esp32.com/viewtopic.php?t=42288 (Pin Configuration)
 https://github.com/0015/ThatProject.git
 
 https://www.youtube.com/watch?v=imNWs6XghI4
+
+
+-----------------------------------------------
+## Camera Pin COnfig
+config.pin_d0 = 5;
+    config.pin_d1 = 18;
+    config.pin_d2 = 19;
+    config.pin_d3 = 21;
+    config.pin_d4 = 36;
+    config.pin_d5 = 39;
+    config.pin_d6 = 34;
+    config.pin_d7 = 35;
+    config.pin_xclk = 0;
+    config.pin_pclk = 22;
+    config.pin_vsync = 25;
+    config.pin_href = 23;
+    config.pin_sscb_sda = 26;
+    config.pin_sscb_scl = 27;
+    config.pin_pwdn = 32;
+    config.pin_reset = -1;
+
+-----------------------------------------------
+ESP32 - LCD
+VCC - VCC
+VCC - LED
+GND - GND
+CS - GPIO 12
+RESET - GPIO 2
+DC - GPIO 13
+SDK - T_DIN
+SDK - GPIO 16
+SCK - GPIO 14
+SCK - T_CLK
+
+#define TFT_CS  12
+#define TFT_RST 2
+#define TFT_DC  13
+
+User_Setup
+#define TFT_MOSI  16
+#define TFT_SCLK  14
+#define TFT_CS    12
+#define TFT_DC    13
+#define TFT_RST   2
+#define TFT_MISO  15
+
+
+Esp32 
+GPIO 12.  White
+GPIO 13.  Grey
+GPIO 14.  Purple
+GPIO 02.  Blue
+GPIO 16.  Black
+
+White
+blue 
+grey
+Black
+Purple
