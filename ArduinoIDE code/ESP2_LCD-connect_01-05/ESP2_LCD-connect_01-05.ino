@@ -77,7 +77,7 @@ void loop() {
 }
 
 void renderJPEG() {
-  uint16_t* pImg;
+  uint16_t *pImg;
   int16_t mcu_w = JpegDec.MCUWidth;
   int16_t mcu_h = JpegDec.MCUHeight;
   int32_t max_x = JpegDec.width;
