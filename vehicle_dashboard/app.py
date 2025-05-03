@@ -8,7 +8,7 @@ import time
 import requests
 import os
 import csv
-from detection import detect_vehicles, draw_detections
+# from detection import detect_vehicles, draw_detections
 
 app = Flask(__name__)
 

@@ -1,9 +1,5 @@
-FYP 2 working :
+FYP 2 working Remaining:
 
-Led add (Red , green , Yellow {Blink this one only})
-Red -> not overtake
-Green -> overtake
-Yellow -> Can be overtake can not
 
 UI add for Dashboard  
 
