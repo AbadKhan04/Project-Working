@@ -2,6 +2,7 @@ import requests
 import serial
 from PIL import Image
 import io
+import time
 
 # Config
 ESP32_URL = 'http://192.168.137.140/stream'  # Replace with your ESP32 IP
@@ -38,8 +39,18 @@ def send_to_arduino(img_data):
             ser.write(rgb565.to_bytes(2, 'big'))
     ser.close()
 
-for frame in jpeg_stream(ESP32_URL):
+def main():
     try:
-        send_to_arduino(frame)
-    except Exception as e:
-        print("Error:", e)
+        for frame in jpeg_stream(ESP32_URL):
+            try:
+                send_to_arduino(frame)
+            except Exception as e:
+                print("Error sending image to Arduino:", e)
+    except KeyboardInterrupt:
+        print("\nStream interrupted by Admin. Closing...")
+    finally:
+        print("Cleaning up...")
+        # Optionally, close any resources if needed
+
+if __name__ == "__main__":
+    main()
