@@ -4,8 +4,8 @@ from PIL import Image
 import io
 
 # Config
-ESP32_URL = 'http://192.168.1.100/stream'  # Replace with your ESP32 IP
-SERIAL_PORT = 'COM4'  # Change to your Arduino COM port
+ESP32_URL = 'http://192.168.137.140/stream'  # Replace with your ESP32 IP
+SERIAL_PORT = 'COM8'  # Change to your Arduino COM port
 BAUD = 115200
 
 def jpeg_stream(url):
