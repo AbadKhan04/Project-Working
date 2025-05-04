@@ -8,7 +8,7 @@ import time
 # ESP32 stream URL and Arduino serial
 ESP32_URL = 'http://192.168.137.40/stream'  # Your ESP32-CAM stream URL
 SERIAL_PORT = 'COM8'                         # Your Arduino UNO port
-BAUD = 115200
+BAUD = 921600  # 115200
 WIDTH, HEIGHT = 480, 320
 
 # Convert RGB888 to RGB565
