@@ -20,6 +20,10 @@ https://github.com/0015/ThatProject.git
 https://www.youtube.com/watch?v=imNWs6XghI4
 
 
+// Replace with your network credentials
+const char* ssid = "DESKTOP-F614S19";
+const char* password = "Error404";
+
 -----------------------------------------------
 ## Camera Pin COnfig
 config.pin_d0 = 5;
