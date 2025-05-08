@@ -6,12 +6,40 @@
     <title>Vehicle Monitoring Dashboard</title>
     <link rel="stylesheet" href="/static/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 </head>
 <body>
     <header>
         <h1>Vehicle Monitoring Dashboard</h1>
     </header>
     <main>
+        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+        const ctx = document.getElementById('myPieChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Search', 'Direct', 'Referral'],
+                datasets: [{
+                    label: 'Traffic Sources',
+                    data: [55, 25, 20],
+                    backgroundColor: ['#8e2de2', '#ad99d7', '#b39ddb'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+        </script>
+        
+        
         <div class="container">
             <div class="video-container">
                 <h2>Live Video Feed</h2>
@@ -33,8 +61,16 @@
                 <canvas id="speedChart"></canvas>
                 <!-- Chart will be dynamically inserted here -->
             </div>
+            <div class="extra-container">
+                <h2>Vehicle PieChart</h2>
+                <div class="piechart-container">
+                    
+                    <canvas id="myPieChart"></canvas>
+                  </div>
+                </div>
+                
             <div id="logs-container">
-                <h3>Logs</h3>
+                <h2>Logs</h2>
                 <div id="logs-content">
                     <table id="logs-table">
                         <thead>
@@ -52,6 +88,8 @@
                     </table>
                 </div>
             </div>
+           
+            
         </div>        
     </main>
     <script src="/static/js/dashboard.js"></script>

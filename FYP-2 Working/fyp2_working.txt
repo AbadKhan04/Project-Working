@@ -70,14 +70,14 @@ User_Setup
 
 
 Esp32 
-GPIO 12.  White
-GPIO 13.  Grey
-GPIO 14.  Purple
-GPIO 02.  Blue
-GPIO 16.  Black
+GPIO 12.  White   brown
+GPIO 13.  Grey    red
+GPIO 14.  Purple  black
+GPIO 02.  Blue    yellow
+GPIO 16.  Black   orange
 
-White
-blue 
-grey
-Black
-Purple
+White   yellow
+blue    brown
+grey    red
+Black   orange
+Purple  black
