@@ -6,7 +6,7 @@ import io
 import time
 
 # ESP32 stream URL and Arduino serial
-ESP32_URL = 'http://192.168.137.47/stream'  # Your ESP32-CAM stream URL
+ESP32_URL = 'http://192.168.137.13/stream'  # Your ESP32-CAM stream URL
 SERIAL_PORT = 'COM8'                         # Your Arduino UNO port
 BAUD = 921600  # 115200
 WIDTH, HEIGHT = 480, 320
