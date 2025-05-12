@@ -1,3 +1,5 @@
+# Fetch fast and render fast. Working on v3 for more better performance.
+
 import requests
 import threading
 import serial
@@ -8,7 +10,7 @@ import time
 
 ESP32_URL = 'http://192.168.137.78/stream'
 SERIAL_PORT = 'COM8'
-BAUD = 115200
+BAUD = 2000000
 WIDTH, HEIGHT = 480, 320
 
 latest_frame = None  # Shared buffer for the latest frame

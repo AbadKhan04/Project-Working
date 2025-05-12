@@ -2,7 +2,7 @@
 MCUFRIEND_kbv tft;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(2000000);
   uint16_t ID = tft.readID();
   tft.begin(ID);
   tft.setRotation(1);
