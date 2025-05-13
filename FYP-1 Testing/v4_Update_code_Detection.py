@@ -8,7 +8,7 @@ import csv
 import requests
 
 # ESP32 Stream URL (adjust IP if different)
-url = 'http://192.168.137.195/stream'
+url = 'http://192.168.137.227/stream'
 
 # Queue for frames to separate capture and processing
 frame_queue = queue.Queue(maxsize=5)
@@ -105,8 +105,8 @@ fetch_thread.daemon = True
 fetch_thread.start()
 
 # ESP8266 Distance Sensor URLs
-FRONT_SENSOR_URL = 'http://192.168.137.2/'  # Front sensor ESP8266 IP
-BACK_SENSOR_URL = 'http://192.168.137.2/'  # Back sensor ESP8266 IP
+FRONT_SENSOR_URL = 'http://192.168.137.214/'  # Front sensor ESP8266 IP
+BACK_SENSOR_URL = 'http://192.168.137.214/'  # Back sensor ESP8266 IP
 
 def fetch_distance(sensor_url):
     try:

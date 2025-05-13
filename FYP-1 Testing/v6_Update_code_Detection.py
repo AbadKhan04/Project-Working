@@ -9,9 +9,9 @@ import requests
 import os
 
 # Configuration
-ESP32_STREAM_URL = 'http://192.168.137.202/stream'
-FRONT_SENSOR_URL = 'http://192.168.137.142/'
-BACK_SENSOR_URL = 'http://192.168.137.142/'
+ESP32_STREAM_URL = 'http://192.168.137.227/stream'
+FRONT_SENSOR_URL = 'http://192.168.137.214/'
+BACK_SENSOR_URL = 'http://192.168.137.214/'
 YOLO_CONFIG = 'Datasets/yolov3-tiny.cfg'
 YOLO_WEIGHTS = 'Datasets/yolov3-tiny.weights'
 COCO_NAMES = 'Datasets/coco.names'

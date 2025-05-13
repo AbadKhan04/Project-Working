@@ -2,7 +2,7 @@ import requests
 import time
 
 # Replace with the IP of your ESP8266
-url = 'http://192.168.137.131/'  # ESP8266 IP
+url = 'http://192.168.137.59/'  # ESP8266 IP
 
 while True:
     try:

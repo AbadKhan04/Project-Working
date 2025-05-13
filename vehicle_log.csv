@@ -1,1 +1,1 @@
-Timestamp,Vehicle_ID,Type,Speed,Overtaking_Event
+Timestamp,Vehicle_ID,Type,Speed,Front_Distance,Back_Distance,Overtaking

@@ -7,7 +7,7 @@ import time
 import csv
 
 # ESP32 Stream URL (adjust IP if different)
-url = 'http://192.168.137.199/stream'
+url = 'http://192.168.137.227/stream'
 
 # Queue for frames to separate capture and processing
 frame_queue = queue.Queue(maxsize=5)
