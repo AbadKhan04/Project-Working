@@ -1,3 +1,5 @@
+# Much faster then previous one.
+
 import requests
 import threading
 import serial
@@ -6,7 +8,7 @@ from PIL import Image
 import io
 import time
 
-ESP32_URL = 'http://192.168.137.90/stream'
+ESP32_URL = 'http://192.168.137.34/stream'
 SERIAL_PORT = 'COM8'
 BAUD = 2000000
 WIDTH, HEIGHT = 480, 320
@@ -37,7 +39,7 @@ def stream_reader():
                 break
 
 def frame_decoder():
-    global decoded_frame
+    global latest_jpg, decoded_frame
     while True:
         current_jpg = None
         with jpg_lock:
@@ -55,6 +57,7 @@ def frame_decoder():
                 print(f"[ERROR] Decode failed: {e}")
 
         time.sleep(0.005)
+
 
 def frame_sender(ser):
     global decoded_frame
