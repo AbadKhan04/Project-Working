@@ -1,3 +1,7 @@
+# Work fine now, good to go
+# test logs not over write now
+
+import os
 import cv2
 import numpy as np
 import urllib.request
@@ -9,8 +13,8 @@ import json
 import requests
 
 # CONFIGURATION
-ESP32_CAM_STREAM_URL = 'http://192.168.137.141/stream'
-NODEMCU_JSON_URL = 'http://192.168.137.236/'  # Replace with your NodeMCU IP
+ESP32_CAM_STREAM_URL = 'http://192.168.137.96/stream'
+NODEMCU_JSON_URL = 'http://192.168.137.157/'  # Replace with your NodeMCU IP
 FRAME_RATE = 15
 CSV_LOG_FILE = "vehicle_log.csv"
 
@@ -31,61 +35,70 @@ vehicle_positions = {}
 tracked_vehicles = set()
 last_detection_time = time.time()
 
+
 # Create CSV file and headers
-with open(CSV_LOG_FILE, mode='w', newline='') as file:
+file_exists = os.path.isfile(CSV_LOG_FILE)
+with open(CSV_LOG_FILE, mode='a', newline='') as file:
     writer = csv.writer(file)
-    writer.writerow(["Timestamp", "Vehicle_ID", "Type", "Speed", "Front_Distance", "Back_Distance", "Overtaking"])
+    # Write headers only if the file is new
+    if not file_exists:
+        writer.writerow(["Timestamp", "Vehicle_ID", "Type", "Speed", "Front_Distance", "Back_Distance", "Overtaking"])
 
 # Logging function
 def log_event(vehicle_id, vehicle_type, speed, front, back, overtaking=False):
     with open(CSV_LOG_FILE, mode='a', newline='') as file:
-        writer = csv.writer(file)
+        writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
         writer.writerow([
             time.strftime("%Y-%m-%d %H:%M:%S"),
-            vehicle_id,
-            vehicle_type,
+            str(vehicle_id),
+            str(vehicle_type),
             f"{speed:.2f}",
-            front,
-            back,
-            overtaking
+            str(front),
+            str(back),
+            bool(overtaking)
         ])
+        file.flush()  # Optional: Ensures data is written to disk immediately
 
-# Fetch distance & overtaking status
+
 latest_distance_data = {"front": 0, "back": 0, "overtaking": False}
 
 def distance_updater():
     global latest_distance_data
     while True:
         try:
-            response = requests.get(NODEMCU_JSON_URL, timeout=1.5)  # increased timeout
+            response = requests.get(NODEMCU_JSON_URL, timeout=2.0)
             if response.status_code == 200:
                 data = response.json()
-                # Apply basic validation
-                front = int(data.get("front", 0))
-                back = int(data.get("back", 0))
-                overtaking = bool(data.get("overtaking", False))
 
-                # Suppress invalid distances
-                if front >= 50:
-                    latest_distance_data["front"] = front
+                front_raw = data.get("front")
+                back_raw = data.get("back")
+
+                front = int(front_raw) if isinstance(front_raw, (int, float)) else 0
+                back = int(back_raw) if isinstance(back_raw, (int, float)) else 0
+
+                latest_distance_data["front"] = front 
+                latest_distance_data["back"] = back
+
+                # Infer overtaking based on back distance
+                if back >= 80:
+                    inferred_overtaking = True
+                elif 70 <= back < 80:
+                    inferred_overtaking = True
+                elif 60 <= back < 70:
+                    inferred_overtaking = False
                 else:
-                    latest_distance_data["front"] = "N/A"
+                    inferred_overtaking = False
+                print(f"[Distance] Front: {front}, Back: {back}, Overtaking: {inferred_overtaking}")
 
-                if back >= 50:
-                    latest_distance_data["back"] = back
-                else:
-                    latest_distance_data["back"] = "N/A"
-
-                latest_distance_data["overtaking"] = overtaking
+                latest_distance_data["overtaking"] = inferred_overtaking
             else:
-                latest_distance_data["front"] = "N/A"
-                latest_distance_data["back"] = "N/A"
-                latest_distance_data["overtaking"] = False
+                raise ValueError(f"Bad HTTP response: {response.status_code}")
         except Exception as e:
             print(f"[Distance Fetch Error] {e}")
-            latest_distance_data["front"] = "N/A"
-            latest_distance_data["back"] = "N/A"
+            latest_distance_data["front"] = 0
+            latest_distance_data["back"] = 0
             latest_distance_data["overtaking"] = False
+
         time.sleep(1.0)
 
 
