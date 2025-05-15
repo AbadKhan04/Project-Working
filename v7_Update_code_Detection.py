@@ -13,8 +13,8 @@ import json
 import requests
 
 # CONFIGURATION
-ESP32_CAM_STREAM_URL = 'http://192.168.137.96/stream'
-NODEMCU_JSON_URL = 'http://192.168.137.157/'  # Replace with your NodeMCU IP
+ESP32_CAM_STREAM_URL = 'http://192.168.137.70/stream'
+NODEMCU_JSON_URL = 'http://192.168.137.84/'  # Replace with your NodeMCU IP
 FRAME_RATE = 15
 CSV_LOG_FILE = "vehicle_log.csv"
 
