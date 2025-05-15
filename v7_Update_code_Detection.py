@@ -42,7 +42,7 @@ with open(CSV_LOG_FILE, mode='a', newline='') as file:
     writer = csv.writer(file)
     # Write headers only if the file is new
     if not file_exists:
-        writer.writerow(["Timestamp", "Vehicle_ID", "Type", "Speed", "Front_Distance", "Back_Distance", "Overtaking"])
+        writer.writerow(["Timestamp", "Vehicle_ID", "Vehicle_Type", "Speed", "Front_Distance", "Back_Distance", "Overtaking"])
 
 # Logging function
 def log_event(vehicle_id, vehicle_type, speed, front, back, overtaking=False):

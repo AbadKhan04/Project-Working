@@ -1,1 +1,11 @@
-Timestamp,Vehicle_ID,Type,Speed,Front_Distance,Back_Distance,Overtaking
+Timestamp,Vehicle ID,Vehicle Type,Speed,Front,Back,Overtaking
+2025-05-14 10:00:01,1001,Car,52.36,145,120,False
+2025-05-14 10:00:05,1002,Truck,39.80,130,100,False
+2025-05-14 10:00:10,1003,Bike,65.50,160,140,True
+2025-05-14 10:00:15,1004,Bus,48.90,155,135,False
+2025-05-14 10:00:20,1005,Car,72.10,170,150,True
+2025-05-14 10:00:25,1006,Bike,60.75,140,115,False
+2025-05-14 10:00:30,1007,Truck,44.33,135,110,False
+2025-05-14 10:00:35,1008,Car,69.20,165,145,True
+2025-05-14 10:00:40,1009,Bike,58.00,150,130,False
+2025-05-14 10:00:45,1010,Bus,41.10,142,120,False

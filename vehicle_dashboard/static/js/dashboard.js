@@ -1,194 +1,134 @@
-// let speedChart; // Chart instance
+let speedChart = null;
+let pieChart = null;
 
-// // Function to fetch metrics and update DOM elements
-// async function fetchMetrics() {
-//     try {
-//         const response = await fetch('/metrics');
-//         const data = await response.json();
-
-//         // Update DOM elements
-//         document.getElementById('total-vehicles').textContent = data.total_vehicle_count || 0;
-//         document.getElementById('front-distance').textContent = data.front_distance || 0;
-//         document.getElementById('back-distance').textContent = data.back_distance || 0;
-//     } catch (error) {
-//         console.error('Error fetching metrics:', error);
-//     }
-// }
-
-// // Fetch logs and update table and chart
-// function fetchLogs() {
-//     fetch('/logs')
-//         .then((response) => response.json())
-//         .then((data) => {
-//             const logsTable = document.getElementById('logs-list');
-//             logsTable.innerHTML = ''; // Clear any existing logs
-
-//             const speeds = [];
-//             const labels = [];
-
-//             if (data.length > 0) {
-//                 data.forEach((log) => {
-//                     // Add the log to the table
-//                     const row = document.createElement('tr');
-//                     row.innerHTML = `
-//                         <td>${log.Timestamp}</td>
-//                         <td>${log.Vehicle_ID}</td>
-//                         <td>${log.Type}</td>
-//                         <td>${log.Speed}</td>
-//                         <td>${log.Overtaking_Event}</td>
-//                     `;
-//                     logsTable.appendChild(row);
-
-//                     // Add data to graph arrays
-//                     speeds.push(parseFloat(log.Speed));
-//                     labels.push(log.Vehicle_ID);
-//                 });
-
-//                 // Update the chart
-//                 updateChart(labels, speeds);
-//             }
-            
-//         })
-//         .catch((error) => {
-//             console.error('Error fetching logs:', error);
-//         });
-// }
-
-// // Initialize or update the speed chart
-// function updateChart(labels, data) {
-//     if (speedChart) {
-//         speedChart.data.labels = labels;
-//         speedChart.data.datasets[0].data = data;
-//         speedChart.update();
-//     } else {
-//         const ctx = document.getElementById('speedChart').getContext('2d');
-//         speedChart = new Chart(ctx, {
-//             type: 'bar',
-//             data: {
-//                 labels: labels,
-//                 datasets: [{
-//                     label: 'Vehicle Speed (km/h)',
-//                     data: data,
-//                     backgroundColor: 'rgba(75, 192, 192, 0.6)',
-//                     borderColor: 'rgba(75, 192, 192, 1)',
-//                     borderWidth: 1,
-//                 }],
-//             },
-//             options: {
-//                 responsive: true,
-//                 plugins: {
-//                     legend: {
-//                         display: true,
-//                     },
-//                 },
-//                 scales: {
-//                     y: {
-//                         beginAtZero: true,
-//                     },
-//                 },
-//             },
-//         });
-//     }
-// }
-
-
-
-// // Periodically fetch metrics and logs
-// setInterval(fetchMetrics, 1000);
-// setInterval(fetchLogs, 5000);
-
-let speedChart; // Bar chart for speed
-let pieChart;   // Pie chart for vehicle types
-
-// Sample demo data
-const demoLogs = [
-    { Timestamp: '2025-05-05 14:12:30', Vehicle_ID: 'V001', Type: 'Car', Speed: '65', Overtaking_Event: 'Yes' },
-    { Timestamp: '2025-05-05 14:15:12', Vehicle_ID: 'V002', Type: 'Truck', Speed: '50', Overtaking_Event: 'No' },
-    { Timestamp: '2025-05-05 14:18:05', Vehicle_ID: 'V003', Type: 'Car', Speed: '72', Overtaking_Event: 'Yes' },
-    { Timestamp: '2025-05-05 14:20:33', Vehicle_ID: 'V004', Type: 'Bus', Speed: '40', Overtaking_Event: 'No' },
-    { Timestamp: '2025-05-05 14:22:50', Vehicle_ID: 'V005', Type: 'Truck', Speed: '55', Overtaking_Event: 'Yes' }
-];
-
-// Initialize everything on page load
 document.addEventListener('DOMContentLoaded', () => {
-    populateLogs(demoLogs);
-    createSpeedChart(demoLogs);
-    createPieChart(demoLogs);
+    initDashboard();
+    setInterval(initDashboard, 5000); // auto refresh
 });
 
-// Populate the logs table
-function populateLogs(logs) {
-    const logsTable = document.getElementById('logs-list');
-    logsTable.innerHTML = '';
+async function initDashboard() {
+    const logs = await fetchLogs();
+    updateLogsTable(logs);
+    // updateStats(logs);
+    updateSpeedChart(logs);
+    updatePieChart(logs);
+    // await updateLiveStats();
+}
 
-    logs.forEach((log) => {
+async function fetchMetrics() {
+    try {
+        const response = await fetch('/metrics');
+        const data = await response.json();
+
+        // Update DOM elements
+        document.getElementById('total-vehicles').textContent = data.total_vehicle_count || 0;
+        document.getElementById('front-distance').textContent = data.front_distance || 0;
+        document.getElementById('back-distance').textContent = data.back_distance || 0;
+    } catch (error) {
+        console.error('Error fetching metrics:', error);
+    }
+}
+setInterval(fetchMetrics, 500);
+
+
+async function fetchLogs() {
+    try {
+        const response = await fetch('/get_logs');
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to fetch logs:', error);
+        return [];
+    }
+}
+
+function updateLogsTable(logs) {
+    const logsList = document.getElementById('logs-list');
+    logsList.innerHTML = ''; // Clear old logs
+
+    logs.forEach(log => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${log.Timestamp}</td>
-            <td>${log.Vehicle_ID}</td>
-            <td>${log.Type}</td>
-            <td>${log.Speed}</td>
-            <td>${log.Overtaking_Event}</td>
+            <td>${log.timestamp}</td>
+            <td>${log.vehicle_id}</td>
+            <td>${log.vehicle_type}</td>
+            <td>${log.speed} km/h</td>
+            <td>${log.front}</td>
+            <td>${log.back}</td>
+            <td>${log.overtaking === 'True' ? 'Yes' : 'No'}</td>
         `;
-        logsTable.appendChild(row);
+        logsList.appendChild(row);
     });
 }
 
-// Create or update the speed bar chart
-function createSpeedChart(logs) {
-    const speeds = logs.map(log => parseFloat(log.Speed));
-    const labels = logs.map(log => log.Vehicle_ID);
+// function updateStats(logs) {
+//     const totalVehicles = logs.length;
+//     document.getElementById('total-vehicles').textContent = totalVehicles;
 
+//     if (totalVehicles > 0) {
+//         const latest = logs[logs.length - 1];
+//         document.getElementById('front-distance').textContent = latest.front;
+//         document.getElementById('back-distance').textContent = latest.back;
+//     } else {
+//         document.getElementById('front-distance').textContent = '0';
+//         document.getElementById('back-distance').textContent = '0';
+//     }
+// }
+
+function createSpeedChart() {
     const ctx = document.getElementById('speedChart').getContext('2d');
     speedChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-            labels: labels,
+            labels: [],
             datasets: [{
-                label: 'Vehicle Speed (km/h)',
-                data: speeds,
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
+                label: 'Speed (km/h)',
+                data: [],
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
             }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    display: true
-                }
-            },
             scales: {
+                x: {
+                    title: { display: true, text: 'Time' },
+                    ticks: { maxTicksLimit: 10 }
+                },
                 y: {
+                    title: { display: true, text: 'Speed (km/h)' },
                     beginAtZero: true
                 }
+            },
+            plugins: {
+                legend: { position: 'bottom' }
             }
         }
     });
 }
 
-// Create the pie chart showing vehicle type distribution
-function createPieChart(logs) {
-    const typeCounts = {};
-    logs.forEach(log => {
-        typeCounts[log.Type] = (typeCounts[log.Type] || 0) + 1;
-    });
+function updateSpeedChart(logs) {
+    if (!speedChart) createSpeedChart();
 
-    const labels = Object.keys(typeCounts);
-    const counts = Object.values(typeCounts);
-    const colors = ['#8e2de2', '#ad99d7', '#b39ddb', '#ffcc80', '#a5d6a7']; // Add more if needed
+    const timestamps = logs.map(log => log.timestamp);
+    const speeds = logs.map(log => parseFloat(log.speed));
 
+    speedChart.data.labels = timestamps;
+    speedChart.data.datasets[0].data = speeds;
+    speedChart.update();
+}
+
+function createPieChart() {
     const ctx = document.getElementById('myPieChart').getContext('2d');
     pieChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: labels,
+            labels: [],
             datasets: [{
-                label: 'Vehicle Types',
-                data: counts,
-                backgroundColor: colors,
-                borderWidth: 1
+                data: [],
+                backgroundColor: ['#8e2de2', '#ad99d7', '#b39ddb', '#ffd54f', '#4db6ac']
             }]
         },
         options: {
@@ -202,4 +142,19 @@ function createPieChart(logs) {
     });
 }
 
+function updatePieChart(logs) {
+    if (!pieChart) createPieChart();
 
+    const typeCounts = {};
+    logs.forEach(log => {
+        const type = log.vehicle_type;
+        typeCounts[type] = (typeCounts[type] || 0) + 1;
+    });
+
+    const labels = Object.keys(typeCounts);
+    const data = Object.values(typeCounts);
+
+    pieChart.data.labels = labels;
+    pieChart.data.datasets[0].data = data;
+    pieChart.update();
+}

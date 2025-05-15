@@ -11,7 +11,6 @@ import csv
 # from detection import detect_vehicles, draw_detections
 
 app = Flask(__name__)
-CSV_LOG_FILE = 'vehicle_log.csv'
 
 # Global variables
 frame_queue = queue.Queue(maxsize=5)
@@ -31,7 +30,7 @@ metrics_data = {
 def gen_frames():
     import cv2
     import urllib.request
-    stream = urllib.request.urlopen('http://192.168.137.233/stream')
+    stream = urllib.request.urlopen('http://192.168.137.96/stream')
     bytes_data = b''
     while True:
         try:
@@ -48,11 +47,10 @@ def gen_frames():
         except Exception as e:
             print(f"Error in video feed: {e}")
             break
-
 def fetch_real_time_data():
     while True:
         try:
-            response = requests.get(f"http://192.168.137.180/", timeout=5)
+            response = requests.get(f"http://192.168.137.157/", timeout=5)
             if response.status_code == 200:
                 data = response.json()
                 metrics_data.update({
@@ -76,25 +74,12 @@ def video_feed():
 def get_metrics():
     return jsonify(metrics_data)
 
-@app.route('/get_logs')
-def get_logs():
-    logs = []
-    try:
-        with open(CSV_LOG_FILE, mode='r') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                logs.append({
-                    'timestamp': row['Timestamp'],
-                    'vehicle_id': row['Vehicle ID'],
-                    'vehicle_type': row['Vehicle Type'],
-                    'speed': row['Speed'],
-                    'front': row['Front'],
-                    'back': row['Back'],
-                    'overtaking': row['Overtaking']
-                })
-    except FileNotFoundError:
-        pass  # Return empty list if file not found
-    return jsonify(logs)
+@app.route('/logs')
+def logs():
+    if os.path.exists('vehicle_data.csv'):
+        with open('vehicle_data.csv', 'r') as file:
+            return jsonify(list(csv.DictReader(file)))
+    return jsonify([])
 
 if __name__ == '__main__':
     threading.Thread(target=fetch_real_time_data, daemon=True).start()
