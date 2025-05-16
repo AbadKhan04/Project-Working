@@ -14,9 +14,9 @@ pipeline = InferencePipeline.init_with_workflow(
     api_key="V7G1P4Eop9w7FS5adFtH",
     workspace_name="cardatasettraining",
     workflow_id="custom-workflow",
-    video_reference="http://192.168.137.56:80/stream", # Path to video, device id (int, usually 0 for built in webcams), or RTSP stream url
+    video_reference="http://192.168.137.184:80/stream", # Path to video, device id (int, usually 0 for built in webcams), or RTSP stream url
     max_fps=30,
-    on_prediction=my_sink
+    on_prediction=my_sink   
 )
 pipeline.start() #start the pipeline
 pipeline.join() #wait for the pipeline thread to finish

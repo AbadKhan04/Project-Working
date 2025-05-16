@@ -1,0 +1,239 @@
+/* ===== Base Reset and Material Font ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    min-height: 100vh;
+    color: #202124;
+    background: linear-gradient(to bottom right, #e3f2fd, #ffffff);
+    background-attachment: fixed;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ===== ANIMATED BACKGROUND ===== */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: moveBackground 30s linear infinite;
+    z-index: -1;
+    opacity: 0.4;
+}
+
+@keyframes moveBackground {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
+}
+
+/* ===== Gradient Header ===== */
+/* header {
+    background: linear-gradient(to right, #ad99d7, #8e2de2);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    letter-spacing: 1px;
+    transition: background 0.3s ease;
+} */
+header {
+    background: linear-gradient(to right, #ad99d7, #8e2de2);
+    color: white;
+    padding: 25px 0; /* Increased padding for a bolder look */
+    text-align: center;
+    font-size: 30px; /* Slightly larger font size for a more striking appearance */
+    font-weight: 700; /* Heavier font weight for added emphasis */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow for depth */
+    letter-spacing: 1.5px; /* Increased letter spacing for a cleaner look */
+    transition: background 0.3s ease, transform 0.3s ease; /* Added transform transition for smooth hover effect */
+    text-transform: uppercase; /* Uppercase letters for added sophistication */
+    border-bottom: 4px solid #fff; /* Adds a clean line below the header */
+    font-family: 'Roboto', sans-serif; /* Material Design-inspired font */
+}
+
+header:hover {
+    background: linear-gradient(to right, #8e2de2, #ad99d7); /* Reverse gradient effect on hover */
+    transform: translateY(-5px); /* Slight lift effect on hover */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25); /* Deeper shadow on hover */
+}
+
+header h1 {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* Soft text shadow for a more dramatic effect */
+    margin: 0; /* Remove any default margins for better control */
+}
+/* ===== Layout Container (Grid for 4 items) ===== */
+/* .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+} */
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Exactly 2 cards per row */
+    gap: 24px;
+    padding: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.piechart-container {
+    max-width: 350px;
+    max-height: 350px;
+    margin: 0 auto;
+    padding: 1rem;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.piechart-container canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 300px !important;
+    max-height: 300px !important;
+}
+
+
+.extra-container {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.extra-container:hover {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-6px);
+}
+
+
+/* ===== Card Styles (Material Design Feel) ===== */
+.video-container,
+.stats-container,
+.chart-container,
+#logs-container {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.video-container:hover,
+.stats-container:hover,
+.chart-container:hover,
+#logs-container:hover {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-6px);
+}
+
+/* ===== Headings ===== */
+h2 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 16px;
+    color: #311b92;
+}
+
+/* ===== Images and Videos ===== */
+img, video {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* ===== Chart Container ===== */
+.chart-container {
+    max-height: 400px;
+    overflow: hidden;
+}
+
+/* ===== Logs Section ===== */
+#logs-content {
+    max-height: 280px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 12px;
+}
+
+/* ===== Table Styling ===== */
+#logs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+#logs-table th,
+#logs-table td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#logs-table th {
+    background: linear-gradient(to right, #673ab7, #9575cd);
+    color: white;
+    font-weight: 600;
+}
+
+/* ===== Scrollbar Styling (optional) ===== */
+#logs-content::-webkit-scrollbar {
+    width: 8px;
+}
+#logs-content::-webkit-scrollbar-thumb {
+    background-color: #c5cae9;
+    border-radius: 10px;
+}
+#logs-content::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+/* ===== Responsive Typography ===== */
+/* @media (max-width: 768px) {
+    header {
+        font-size: 24px;
+        padding: 16px 0;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .container {
+        padding: 16px;
+    }
+} */
+@media (max-width: 768px) {
+    header {
+        font-size: 24px;
+        padding: 16px 0;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .container {
+        grid-template-columns: 1fr; /* Stack all cards */
+        padding: 16px;
+    }
+}
+

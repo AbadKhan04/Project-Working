@@ -50,9 +50,9 @@ body::before {
 header {
     background: linear-gradient(to right, #ad99d7, #8e2de2);
     color: white;
-    padding: 40px 0; /* Increased padding for a bolder look */
+    padding: 25px 0; /* Increased padding for a bolder look */
     text-align: center;
-    font-size: 36px; /* Slightly larger font size for a more striking appearance */
+    font-size: 30px; /* Slightly larger font size for a more striking appearance */
     font-weight: 700; /* Heavier font weight for added emphasis */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow for depth */
     letter-spacing: 1.5px; /* Increased letter spacing for a cleaner look */
@@ -88,6 +88,13 @@ header h1 {
     padding: 32px;
     max-width: 1200px;
     margin: 0 auto;
+   /* Make the logs card span full width */
+#logs-container {
+    grid-column: span 2;
+}
+
+
+
 }
 .piechart-container {
     max-width: 350px;
@@ -236,4 +243,3 @@ img, video {
         padding: 16px;
     }
 }
-

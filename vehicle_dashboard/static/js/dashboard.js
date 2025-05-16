@@ -21,7 +21,7 @@ async function fetchMetrics() {
         const data = await response.json();
 
         // Update DOM elements
-        document.getElementById('total-vehicles').textContent = data.total_vehicle_count || 0;
+        // document.getElementById('total-vehicles').textContent = data.total_vehicle_count || 0;
         document.getElementById('front-distance').textContent = data.front_distance || 0;
         document.getElementById('back-distance').textContent = data.back_distance || 0;
     } catch (error) {
