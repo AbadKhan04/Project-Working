@@ -1,0 +1,69 @@
+# Step 1: Install dependencies
+!pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
+!pip install roboflow ultralytics
+
+# Step 2: Import libraries
+import os
+from roboflow import Roboflow
+from ultralytics import YOLO
+import yaml
+import torch
+
+# Verify CUDA
+print(f"CUDA available: {torch.cuda.is_available()}")
+
+# Step 3: Download dataset
+rf = Roboflow(api_key="YOUR_API_KEY")
+project = rf.workspace("WORKSPACE_ID").project("PROJECT_ID")
+dataset = project.version(1).download("yolov5")
+
+# Step 4: Set correct paths
+dataset_location = "/content/Car-detection-2"  # Directly use observed path
+data_yaml = os.path.join(dataset_location, "data.yaml")
+
+# Verify directory structure
+print("\nDirectory structure:")
+!ls -l {dataset_location}
+
+# Step 5: Fix data.yaml paths
+with open(data_yaml, 'r') as f:
+    data = yaml.safe_load(f)
+
+# Update paths based on actual structure
+data['train'] = os.path.join(dataset_location, "train", "images")
+data['val'] = os.path.join(dataset_location, "valid", "images")
+data['test'] = os.path.join(dataset_location, "test", "images")
+
+with open(data_yaml, 'w') as f:
+    yaml.dump(data, f)
+
+# Verify updated data.yaml
+print("\nUpdated data.yaml contents:")
+!cat {data_yaml}
+
+# Step 6: Training configuration
+config = {
+    "epochs": 100,
+    "batch_size": 8,
+    "img_size": 640,
+    "device": "0",
+    "workers": 2,
+}
+
+# Step 7: Initialize and train model
+model = YOLO("yolov8s.pt")  # Using YOLOv8
+results = model.train(
+    data=data_yaml,
+    epochs=config["epochs"],
+    batch=config["batch_size"],
+    imgsz=config["img_size"],
+    device=config["device"],
+    workers=config["workers"],
+    name="car_detection_v2"
+)
+
+# Step 8: Validate and export
+results = model.val()
+model.export(format="onnx")
+
+print("Training completed successfully!")
