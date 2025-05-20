@@ -8,7 +8,7 @@ from PIL import Image
 import io
 import time
 
-ESP32_URL = 'http://192.168.137.34/stream'
+ESP32_URL = 'http://192.168.137.187/stream'
 SERIAL_PORT = 'COM8'
 BAUD = 2000000
 WIDTH, HEIGHT = 480, 320
