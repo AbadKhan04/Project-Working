@@ -4,8 +4,8 @@ import time
 import tkinter as tk  # For screen size detection
 
 # Configuration
-VIDEO_PATH = "videoplayback.webm"  # Replace with your video path
-MODEL_PATH = "Datasets/sample-v3/best.pt"
+VIDEO_PATH = "test_video.mp4"  # Replace with your video path
+MODEL_PATH = "Datasets/sample-v5/best.pt"
 CONF_THRESHOLD = 0.5
 SHOW_CONF = True
 OUTPUT_VIDEO = True
