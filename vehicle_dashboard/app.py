@@ -31,7 +31,7 @@ metrics_data = {
 def gen_frames():
     import cv2
     import urllib.request
-    stream = urllib.request.urlopen('http://192.168.137.107/stream')
+    stream = urllib.request.urlopen('http://192.168.137.182/stream')
     bytes_data = b''
     while True:
         try:
@@ -52,7 +52,7 @@ def gen_frames():
 def fetch_real_time_data():
     while True:
         try:
-            response = requests.get(f"http://192.168.137.95/", timeout=5)
+            response = requests.get(f"http://192.168.137.175/", timeout=5)
             if response.status_code == 200:
                 data = response.json()
                 metrics_data.update({
