@@ -31,7 +31,7 @@ metrics_data = {
 def gen_frames():
     import cv2
     import urllib.request
-    stream = urllib.request.urlopen('http://192.168.137.182/stream')
+    stream = urllib.request.urlopen('http://192.168.137.67/stream')
     bytes_data = b''
     while True:
         try:
